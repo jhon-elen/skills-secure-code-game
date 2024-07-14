@@ -12,22 +12,44 @@ Follow the instructions below to get started:
 '''
 
 from collections import namedtuple
+from decimal import Decimal
 
 Order = namedtuple('Order', 'id, items')
 Item = namedtuple('Item', 'type, description, amount, quantity')
 
 def validorder(order: Order):
-    net = 0
+    net = Decimal('0')
 
     for item in order.items:
+        amount = item.amount
+        quantity = item.quantity
         if item.type == 'payment':
-            net += item.amount
+            net += Decimal(amount)
         elif item.type == 'product':
-            net -= item.amount * item.quantity
+            net -= Decimal(amount) * Decimal(quantity)
         else:
             return "Invalid item type: %s" % item.type
 
-    if net != 0:
-        return "Order ID: %s - Payment imbalance: $%0.2f" % (order.id, net)
+    if order.items[0].quantity > 1 or order.items[-1].quantity > 1:
+        return "Total amount payable for an order exceeded"
+
+    net_final = round(float(net))
+    if net_final != 0:
+        return "Order ID: %s - Payment imbalance: $%0.2f" % (order.id, net_final)
     else:
         return "Order ID: %s - Full payment received!" % order.id
+    
+
+""" num_items = 12
+items = [Item(type='product', description='tv', amount=99999, quantity=num_items)]
+for i in range(num_items):
+    items.append(Item(type='payment', description='invoice_' + str(i), amount=99999, quantity=1))
+order_1 = Order(id='1', items=items)
+result1 = validorder(order_1), 'Total amount payable for an order exceeded'
+print(result1)
+
+# Put payments before products
+items = items[1:] + [items[0]]
+order_2 = Order(id='2', items=items)
+result2 = validorder(order_2), 'Total amount payable for an order exceeded'
+print(result2) """
