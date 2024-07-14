@@ -38,18 +38,3 @@ def validorder(order: Order):
         return "Order ID: %s - Payment imbalance: $%0.2f" % (order.id, net_final)
     else:
         return "Order ID: %s - Full payment received!" % order.id
-    
-
-""" num_items = 12
-items = [Item(type='product', description='tv', amount=99999, quantity=num_items)]
-for i in range(num_items):
-    items.append(Item(type='payment', description='invoice_' + str(i), amount=99999, quantity=1))
-order_1 = Order(id='1', items=items)
-result1 = validorder(order_1), 'Total amount payable for an order exceeded'
-print(result1)
-
-# Put payments before products
-items = items[1:] + [items[0]]
-order_2 = Order(id='2', items=items)
-result2 = validorder(order_2), 'Total amount payable for an order exceeded'
-print(result2) """
